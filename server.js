@@ -237,9 +237,9 @@ function tranformData(item){
         
     }
 
-    if(view != null){
-        itemDetailTxt += `<p class="text-right mt-2">คนเข้าดู ${view} View</p>`;
-    }
+    // if(view != null){
+    //     itemDetailTxt += `<p class="text-right mt-2">คนเข้าดู ${view} View</p>`;
+    // }
 
     itemDetailTxt += `<p class="text-right"><a href="${apiBaseUrl}/roverse/detail/${item.id}" class="btn btn-outline-primary" target="_blank">View/Buy</a></p>`;
     
