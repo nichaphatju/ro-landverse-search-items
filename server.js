@@ -11,16 +11,10 @@ const apiBaseUrl = 'https://apps.maxion.gg';
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-Router(app);
-
 // Serve HTML file
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
-
-app.use((req, res, next) => {
-    res.status(404).json({ message: "Route not found" });
-})
 
 // Handle GET request from frontend
 app.get('/api/search', (req, res) => {
