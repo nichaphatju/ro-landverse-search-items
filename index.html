@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Item RO Landverse</title>
+  <head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+ </head>
+</head>
+<body>
+  <div class="mx-3 my-3">
+        <h1>Search Item RO Landverse</h1>
+        
+        <form id="searchForm">
+            <label for="server">Server:</label>
+            <select name="server" id="server">
+                <option value="1" selected>Hela</option>
+                <option value="2">Freya</option>
+            </select>
+            
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" placeholder="Enter name">
+
+            <label for="category">Category:</label>
+            <select name="category" id="category">
+                <option value="headgear">HeadGear</option>
+                <option value="weapon">Weapon</option>
+                <option value="armor">Armor</option>
+                <option value="card">Card</option>
+                <option value="shadowgear">Shadow Gear</option>
+                <option value="costume">Costume</option>
+            </select>
+
+            <label for="subtype">Sub Type:</label>
+                <select name="subtype" id="subtype">
+            </select>
+
+            <label for="job">Job:</label>
+                <select name="job" id="job">
+            </select>
+
+            <br/>
+
+            <label for="opts">Enchant:</label>
+            <input type="text" id="opts" name="opts" placeholder="Enter enchant">
+
+            <label for="card">Card:</label>
+            <select name="card" id="card">
+                <option value="all" selected>All</option>
+                <option value="y">Yes</option>
+                <option value="n">No</option>
+            </select>
+
+            <label for="maxprice">Max Price:</label>
+            <input type="number" id="maxprice" name="maxprice" placeholder="Enter Max Price">
+
+            <input type="hidden" id="token" name="token" placeholder="Enter Token">
+
+            <button type="button" onclick="search()">Search</button>
+            <button type="button" onclick="clearForm()">Clear</button>
+        </form>
+    </div>
+
+  <div class="mx-3">
+    <div id="result"></div>
+  </div>
+
+  <script>
+    var categorySubTypes = {
+        "weapon": ["All", "Knuckle", "Sword", "Spear", "Mace", "Katar", "Staff", "Book", "Dagger"],
+        "headgear": ["All", "Upper", "Middle", "Lower", "UpperMid", "MidLow", "UpperLow", "UpperMidLow"],
+        "armor": ["All"],
+        "card": ["All"] ,
+        "shadowgear": ["All"],
+        "costume": ["All"]
+    }
+
+    var jobs = ["Any", "All", "Acolyte", "Alchemist", "Archer", "Assassin", "Barddancer", "Blacksmith", 
+                "Crusader", "Gunslinger", "Hunter", "Kagerouoboro", "Knight", "Mage", "Merchant", "Monk", 
+                "Ninja", "Novice", "Priest", "Rebellion", "Rogue", "Sage", "Soullinker", "Stargladiator", 
+                "Summoner", "Supernovice", "Swordman", "Taekwon", "Thief", "Wizard"]
+
+    window.addEventListener('load', function() {
+        var category = document.getElementById("category");
+        var subtype = document.getElementById("subtype");
+        console.log(categorySubTypes['headgear'])
+
+        jobs.forEach(opt => {
+            job.options[job.options.length] = new Option(opt, opt);
+        });
+
+        categorySubTypes['headgear'].forEach(opt => {
+            subtype.options[subtype.options.length] = new Option(opt, opt);
+        });
+
+        category.onchange = function() {
+
+            subtype.length = 1;
+            //display correct values
+            categorySubTypes[category.value].forEach(opt => {
+                subtype.options[subtype.options.length] = new Option(opt, opt);
+            });
+        }
+    });
+
+    function clearForm() {
+        console.log('clear')
+        document.getElementById("searchForm").reset();
+    }
+
+
+    function search() {
+      const name = document.getElementById('name').value;
+      const category = document.getElementById('category').value;
+      const opts = document.getElementById('opts').value;
+      const sv = document.getElementById('server').value;
+      const card = document.getElementById('card').value;
+      const maxprice = document.getElementById('maxprice').value;
+      const subtype = document.getElementById('subtype').value;
+      const job = document.getElementById('job').value;
+
+      const resultDiv = document.getElementById('result');
+      console.log('searching...');
+
+      resultDiv.innerHTML = `<br/> Searching ${category}...`;
+
+      fetch(`/api/search?name=${name}&category=${category}&sv=${sv}&maxprice=${maxprice}&ops=${opts}&card=${card}&token=${token}&subtype=${subtype}&job=${job}`)
+        .then(response => response.json())
+        .then(data => {
+        console.log(data)
+          
+          resultDiv.innerHTML = `<h3>Search Results: ${data.count} found </h3>`;
+          
+          if (data.data.length === 0) {
+            resultDiv.innerHTML += 'No results found.';
+          } else {
+            resultDiv.innerHTML += data.data;
+          }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+  </script>
+</body>
+</html>
