@@ -3,21 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Search Item RO Landverse">
+  <meta name="keywords" content="RO, Ragnarok, Ragnarok landverse, Ragnarok landverse item, Ragnarok landverse market">
+  <meta name="author" content="Nichaphat J">
   <title>Search Item RO Landverse</title>
-  <head>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
- </head>
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
   <div class="mx-3 my-3">
         <h1>Search Item RO Landverse</h1>
         
-        <form id="searchForm">
+        <form id="searchForm" class="form-inline">
+          <div class="form-group">
             <label for="server">Server:</label>
-            <select name="server" id="server">
+            <select name="server" id="server" class="form-control">
                 <option value="1" selected>Hela</option>
                 <option value="2">Freya</option>
             </select>
+          </div>
             
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" placeholder="Enter name">
@@ -105,7 +109,6 @@
     });
 
     function clearForm() {
-        console.log('clear')
         document.getElementById("searchForm").reset();
     }
 
@@ -125,12 +128,10 @@
       const resultDiv = document.getElementById('result');
 
       resultDiv.innerHTML = `<br/> Searching ${category}...`;
-      console.log('searching...');
 
       fetch(`/api/search?name=${name}&category=${category}&sv=${sv}&maxprice=${maxprice}&ops=${opts}&card=${card}&subtype=${subtype}&job=${job}`)
         .then(response => response.json())
         .then(data => {
-        console.log(data)
           
           resultDiv.innerHTML = `<h3>Search Results: ${data.count} found </h3>`;
           
