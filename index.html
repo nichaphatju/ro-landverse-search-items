@@ -3,62 +3,90 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Search Item RO Landverse">
+  <meta name="keywords" content="RO, Ragnarok, Ragnarok landverse, Ragnarok landverse item, Ragnarok landverse market">
   <title>Search Item RO Landverse</title>
-  <head>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
- </head>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
   <div class="mx-3 my-3">
         <h1>Search Item RO Landverse</h1>
         
-        <form id="searchForm">
-            <label for="server">Server:</label>
-            <select name="server" id="server">
-                <option value="1" selected>Hela</option>
-                <option value="2">Freya</option>
-            </select>
+        <form id="searchForm" class="mt-1">
+          <div class="row mx-1">
+              <div class="form-group form-inline">
+                <label for="server">Server: </label>
+                <select name="server" id="server" class="form-control form-control-sm mx-sm-3">
+                    <option value="1" selected>Hela</option>
+                    <option value="2">Freya</option>
+                </select>
+              </div>
+
+              <div class="form-group form-inline">
+                <label for="name">Item Name:</label>
+                <input type="text" id="name" name="name" placeholder="Enter name" class="form-control form-control-sm mx-sm-3">
+              </div>
+
+              <div class="form-group form-inline">
+                <label for="category">Category:</label>
+                <select name="category" id="category" class="form-control form-control-sm mx-sm-3">
+                    <option value="headgear">HeadGear</option>
+                    <option value="weapon">Weapon</option>
+                    <option value="armor">Armor</option>
+                    <option value="card">Card</option>
+                    <option value="shadowgear">Shadow Gear</option>
+                    <option value="costume">Costume</option>
+                </select>
+              </div>
+
+              <div class="form-group form-inline">
+                <label for="subtype">Sub Type:</label>
+                  <select name="subtype" id="subtype"  class="form-control form-control-sm mx-sm-3">
+                  </select>
+              </div>
+
+              <div class="form-group form-inline">
+                <label for="job">Job:</label>
+                  <select name="job" id="job" class="form-control form-control-sm mx-sm-3">
+                  </select>
+              </div>
+
+          </div>
+
+
+          <div class="row mx-1">
             
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" placeholder="Enter name">
+              <div class="form-group form-inline">
+                <label for="opts">Enchant:</label>
+                <input type="text" id="opts" name="opts" placeholder="Enter enchant" class="form-control form-control-sm mx-sm-3">
+              </div>
 
-            <label for="category">Category:</label>
-            <select name="category" id="category">
-                <option value="headgear">HeadGear</option>
-                <option value="weapon">Weapon</option>
-                <option value="armor">Armor</option>
-                <option value="card">Card</option>
-                <option value="shadowgear">Shadow Gear</option>
-                <option value="costume">Costume</option>
-            </select>
+              <div class="form-group form-inline">
+                <label for="card">Card:</label>
+                <select name="card" id="card" class="form-control form-control-sm mx-sm-3">
+                    <option value="all" selected>All</option>
+                    <option value="y">Yes</option>
+                    <option value="n">No</option>
+                </select>
+              </div>
 
-            <label for="subtype">Sub Type:</label>
-                <select name="subtype" id="subtype">
-            </select>
+              <div class="form-group form-inline">
+                <label for="minprice">Min Price:</label>
+                <input type="number" id="minprice" name="minprice" placeholder="Enter Min Price" class="form-control form-control-sm mx-sm-3">
+              </div>
 
-            <label for="job">Job:</label>
-                <select name="job" id="job">
-            </select>
+              <div class="form-group form-inline">
+                <label for="maxprice">Max Price:</label>
+                <input type="number" id="maxprice" name="maxprice" placeholder="Enter Max Price" class="form-control form-control-sm mx-sm-3">
+              </div>
 
-            <br/>
+            <div class="form-group col-sm-2 form-inline">
+              <button type="button" onclick="search()" class="btn btn-primary btn-sm mx-1">Search</button>
+              <button type="button" onclick="clearForm()" class="btn btn-outline-primary btn-sm">Clear</button>
+            </div>
+            
+          </div>
 
-            <label for="opts">Enchant:</label>
-            <input type="text" id="opts" name="opts" placeholder="Enter enchant">
-
-            <label for="card">Card:</label>
-            <select name="card" id="card">
-                <option value="all" selected>All</option>
-                <option value="y">Yes</option>
-                <option value="n">No</option>
-            </select>
-
-            <label for="maxprice">Max Price:</label>
-            <input type="number" id="maxprice" name="maxprice" placeholder="Enter Max Price">
-
-            <input type="hidden" id="token" name="token" placeholder="Enter Token">
-
-            <button type="button" onclick="search()">Search</button>
-            <button type="button" onclick="clearForm()">Clear</button>
         </form>
     </div>
 
@@ -84,7 +112,6 @@
     window.addEventListener('load', function() {
         var category = document.getElementById("category");
         var subtype = document.getElementById("subtype");
-        console.log(categorySubTypes['headgear'])
 
         jobs.forEach(opt => {
             job.options[job.options.length] = new Option(opt, opt);
@@ -105,7 +132,6 @@
     });
 
     function clearForm() {
-        console.log('clear')
         document.getElementById("searchForm").reset();
     }
 
@@ -116,19 +142,18 @@
       const opts = document.getElementById('opts').value;
       const sv = document.getElementById('server').value;
       const card = document.getElementById('card').value;
+      const minprice = document.getElementById('minprice').value;
       const maxprice = document.getElementById('maxprice').value;
       const subtype = document.getElementById('subtype').value;
       const job = document.getElementById('job').value;
 
       const resultDiv = document.getElementById('result');
-      console.log('searching...');
 
       resultDiv.innerHTML = `<br/> Searching ${category}...`;
 
-      fetch(`/api/search?name=${name}&category=${category}&sv=${sv}&maxprice=${maxprice}&ops=${opts}&card=${card}&token=${token}&subtype=${subtype}&job=${job}`)
+      fetch(`/api/search?name=${name}&category=${category}&sv=${sv}&minprice=${minprice}&maxprice=${maxprice}&ops=${opts}&card=${card}&subtype=${subtype}&job=${job}`)
         .then(response => response.json())
         .then(data => {
-        console.log(data)
           
           resultDiv.innerHTML = `<h3>Search Results: ${data.count} found </h3>`;
           

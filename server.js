@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = 8080;
 const axios = require('axios');
+const cheerio = require('cheerio');
+
 const functions = require("firebase-functions");
 
 const apiBaseUrl = 'https://apps.maxion.gg';
@@ -19,26 +21,17 @@ app.get('/', (req, res) => {
 // Handle GET request from frontend
 app.get('/api/search', (req, res) => {
 
-    console.log('api search')
-
     const param = req.query;
     const apiPath = '/api/market/list';
 
     axios.get(`${apiBaseUrl}${apiPath}?status=LISTING&category=${param.category}&serverId=${param.sv}`).then((resp) => {
 
-        console.log('call api done');
-
-        let jsonRes = [];
         let respTxt = '';
-
         let count = 0;
 
         respTxt += `<div class="row">`;
-
         resp.data.forEach(ele => {
-            // console.log(ele)
-          
-
+        
             if(filterResults(ele, param)){
                 count++;
                 respTxt += tranformData(ele);
@@ -88,7 +81,12 @@ function filterResults(item, param){
             return false;
         }
     }
-
+    
+    if(param.minprice && param.minprice != null && param.minprice !== undefined){
+        if(Number(item.price) < Number(param.minprice)){
+            return false;
+        }
+    }
 
     if(param.maxprice && param.maxprice != null && param.maxprice !== undefined){
         if(Number(item.price) > Number(param.maxprice)){
@@ -203,10 +201,13 @@ function tranformData(item){
             
             level = `Armor Level: ${item.nft.armorLevel}`;
 
+            itemDetailTxt += `Defense: ${item.nft.defense}</br>`;
+
         }else if(item.nft.type == 'Weapon'){
             level = `Weapon Level: ${item.nft.weaponLevel}`;
             
             itemDetailTxt += `Atk: ${item.nft.attack}</br>`;
+            itemDetailTxt += `Matk: ${item.nft.magicAttack}</br>`;
         }
 
         itemDetailTxt += `${level}</br>`;
@@ -229,8 +230,6 @@ function tranformData(item){
 
         /** Third section */
         itemDetailTxt += `</li><li class="list-group-item">`;
-
-
         itemDetailTxt += `<p> การ์ด`;
         
 
@@ -252,7 +251,7 @@ function tranformData(item){
     //     itemDetailTxt += `<p class="text-right mt-2">คนเข้าดู ${view} View</p>`;
     // }
 
-    itemDetailTxt += `<p class="text-right"><a href="${apiBaseUrl}/roverse/detail/${item.id}" class="btn btn-outline-primary" target="_blank">View/Buy</a></p>`;
+    itemDetailTxt += `<p class="text-right mt-1"><a href="${apiBaseUrl}/roverse/detail/${item.id}" class="btn btn-outline-primary" target="_blank">View/Buy</a></p>`;
     
     itemDetailTxt += `</div>`;
     itemDetailTxt += `</div>`;
