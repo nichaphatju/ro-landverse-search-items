@@ -136,14 +136,25 @@ function filterResults(item, param){
         }
     }
 
+    let allJobs = ["All", "Acolyte", "Alchemist", "Archer", "Assassin", "Barddancer", "Blacksmith", "Crusader", "Gunslinger", "Hunter", "Kagerouoboro", "Knight", "Mage", "Merchant", "Monk", "Ninja", "Novice", "Priest", "Rebellion", "Rogue", "Sage", "Soullinker", "Stargladiator", "Summoner", "Supernovice", "Swordman", "Taekwon", "Thief", "Wizard"];
+    let isNoRequirement = true;
+
+    allJobs.forEach(job => {
+        let jobAttr = `job${job}`;
+        if(item.nft[jobAttr] != null){
+            isNoRequirement = false;
+        }
+    });
+
     if(item.nft.type == 'Armor' || item.nft.type == 'Weapon'){
-        if(param.job != 'Any'){
+        if(param.job != 'Any' && !isNoRequirement){
             let jobAttr = `job${param.job}`;
             if(item.nft['jobAll'] != 1 && item.nft[jobAttr] != 1){
                 return false;
             }
         }
     }
+    
 
     return true;
 }
