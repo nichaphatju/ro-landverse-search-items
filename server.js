@@ -59,12 +59,12 @@ app.get('/api/search', (req, res) => {
     
             respTxt += `</div>`;
             res.setHeader('Content-Type', 'application/json');
-            res.send(JSON.stringify({count: count, data: respTxt}));
+            res.send(JSON.stringify({result: 'success', count: count, data: respTxt}));
     
         }).catch((err) => {
             console.error(err);
             res.setHeader('Content-Type', 'application/json');
-            res.send(JSON.stringify({data: 'Error'}));
+            res.send(JSON.stringify({result: 'failed', error: err, data: null}));
         })
 
     });
@@ -222,6 +222,8 @@ function tranformData(item){
     let createdAt = formatDate(new Date(item.nft.createdAt));
     let view = item.nft.view ? item.nft.view : null;
 
+    let currentItemInfo = itemInfo[item.nft.nameid];
+
     if(item.nft.refine > 0){
         itemName += `+${item.nft.refine}`;
     }
@@ -302,6 +304,9 @@ function tranformData(item){
         }
 
         itemDetailTxt += ` </ul>`;
+    }else if(item.nft.type == 'Card'){
+        var cardCollectionEffect = currentItemInfo.desc.substring(currentItemInfo.desc.indexOf('Collection Effect')+17, currentItemInfo.desc.length);
+        itemDetailTxt += `<p class="my-2"><b>Collection Effect</b>${cardCollectionEffect}</p>`;
     }
 
     itemDetailTxt += 
@@ -311,7 +316,7 @@ function tranformData(item){
             <a href="${apiBaseUrl}/roverse/detail/${item.id}" class="float-right btn btn-outline-primary btn-sm mt-1 ms-3" target="_blank">View/Buy</a>
                 <div class="collapse" id="itemInfo${item.id}">
                     <div class="card card-body">
-                        ${itemInfo[item.nft.nameid].desc}
+                        ${currentItemInfo.desc.replaceAll(`Collection Effect${cardCollectionEffect}`, '')}
                     </div>
                 </div>`;
 
