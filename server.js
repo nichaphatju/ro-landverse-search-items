@@ -129,6 +129,14 @@ function filterResults(item, param){
     let op3 = item.nft.option3Text ? item.nft.option3Text.toLowerCase() : '';
     let op4 = item.nft.option4Text ? item.nft.option4Text.toLowerCase() : '';
 
+    let isCostume = item.nft.locationCostumeHeadTop || item.nft.locationCostumeHeadMid || item.nft.locationCostumeHeadLow || item.nft.locationCostumeGarment;
+    if(isCostume){
+        op0 += item.nft.card0Name ? item.nft.card0Name.toLowerCase() : '';
+        op1 += item.nft.card1Name ? item.nft.card1Name.toLowerCase() : '';
+        op2 += item.nft.card2Name ? item.nft.card2Name.toLowerCase() : '';
+        op3 += item.nft.card3Name ? item.nft.card3Name.toLowerCase() : '';
+    }
+
     if(param.ops && param.ops != null && param.ops !== undefined){
         let isEnchantWanted = op0.includes(param.ops.toLowerCase()) ||
                                 op1.includes(param.ops.toLowerCase()) ||
@@ -275,30 +283,30 @@ function tranformData(item){
         /** Second section */
         itemDetailTxt += `<li class="list-group-item">`;
 
-        itemDetailTxt += `<p> Enchant`;
+        itemDetailTxt += `<p> <b>Enchant</b>`;
         
-        if(item.nft.option0Text){
+        if(item.nft.option0Text || item.nft.option1Text || item.nft.option2Text || item.nft.option3Text || item.nft.option4Text){
             itemDetailTxt += `</p>`;
-            itemDetailTxt += `1. ${item.nft.option0Text}</br>`;
-            itemDetailTxt += `2. ${item.nft.option1Text}</br>`;
-            itemDetailTxt += `3. ${item.nft.option2Text}</br>`;
-            itemDetailTxt += `4. ${item.nft.option3Text}</br>`;
-            itemDetailTxt += `5. ${item.nft.option4Text}</br>`;
+            itemDetailTxt += `1. ${item.nft.option0Text ? item.nft.option0Text : '-'}</br>`;
+            itemDetailTxt += `2. ${item.nft.option1Text ? item.nft.option1Text : '-'}</br>`;
+            itemDetailTxt += `3. ${item.nft.option2Text ? item.nft.option2Text : '-'}</br>`;
+            itemDetailTxt += `4. ${item.nft.option3Text ? item.nft.option3Text : '-'}</br>`;
+            itemDetailTxt += `5. ${item.nft.option4Text ? item.nft.option4Text : '-'}</br>`;
         }else{
             itemDetailTxt += `: None</p>`;
         }
 
         /** Third section */
         itemDetailTxt += `</li><li class="list-group-item">`;
-        itemDetailTxt += `<p> Card`;
+        itemDetailTxt += `<p> <b>Card Slots</b>`;
         
 
-        if(item.nft.card0Name){
+        if(item.nft.card0Name || item.nft.card1Name || item.nft.card2Name || item.nft.card3Name){
             itemDetailTxt += `</p>`;
-            itemDetailTxt += `1. ${item.nft.card0Name}</br>`;
-            itemDetailTxt += `2. ${item.nft.card1Name}</br>`;
-            itemDetailTxt += `3. ${item.nft.card2Name}</br>`;
-            itemDetailTxt += `4. ${item.nft.card3Name}</br>`;
+            itemDetailTxt += `1. ${item.nft.card0Name ? item.nft.card0Name : '-'}</br>`;
+            itemDetailTxt += `2. ${item.nft.card1Name ? item.nft.card1Name : '-'}</br>`;
+            itemDetailTxt += `3. ${item.nft.card2Name ? item.nft.card2Name : '-'}</br>`;
+            itemDetailTxt += `4. ${item.nft.card3Name ? item.nft.card3Name : '-'}</br>`;
         }else{
             itemDetailTxt += `: None</p>`;
         }
