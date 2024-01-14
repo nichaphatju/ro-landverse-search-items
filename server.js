@@ -3,12 +3,18 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = 8080;
 const axios = require('axios');
-const cheerio = require('cheerio');
+const fs = require('fs');
+const path = require('path');
 
 const functions = require("firebase-functions");
 
 const apiBaseUrl = 'https://apps.maxion.gg';
+const itemInfoUrl = 'https://cdn.maxion.gg/landverse/web/iteminfo.min.json';
+const marketAPIPath = '/api/market/list';
 
+const itemInfoFileName = 'itemInfo.json';
+
+var itemInfo = {};
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -22,32 +28,75 @@ app.get('/', (req, res) => {
 app.get('/api/search', (req, res) => {
 
     const param = req.query;
-    const apiPath = '/api/market/list';
 
-    axios.get(`${apiBaseUrl}${apiPath}?status=LISTING&category=${param.category}&serverId=${param.sv}`).then((resp) => {
+    console.log('Requesting...')
 
-        let respTxt = '';
-        let count = 0;
+    fs.readFile(`./${itemInfoFileName}`, "utf8", (error, data) => {
+        console.log('read file')
 
-        respTxt += `<div class="row">`;
-        resp.data.forEach(ele => {
-        
-            if(filterResults(ele, param)){
-                count++;
-                respTxt += tranformData(ele);
-            }
+        if (error) {
+            console.log(error);
+        }else{
+            itemInfo = JSON.parse(data);
+        }
+
+        axios.get(`${apiBaseUrl}${marketAPIPath}?status=LISTING&category=${param.category}&serverId=${param.sv}`).then((resp) => {
+
+            let respTxt = '';
+            let count = 0;
+    
+            respTxt += `<div class="row">`;
+            resp.data.forEach(ele => {
             
+                if(filterResults(ele, param)){
+                    count++;
+                    respTxt += tranformData(ele);
+                }
+                
+            });
+    
+            respTxt += `</div>`;
+            res.setHeader('Content-Type', 'application/json');
+            res.send(JSON.stringify({count: count, data: respTxt}));
+    
+        }).catch((err) => {
+            console.error(err);
+            res.setHeader('Content-Type', 'application/json');
+            res.send(JSON.stringify({data: 'Error'}));
+        })
+
+    });
+
+});
+
+app.get('/api/loaditeminfo', (req, res) => {
+
+    axios.request({
+        method: "GET",
+        url: itemInfoUrl
+    }).then((resp) => {
+        
+        let items = {};
+        resp.data.forEach((ele) => {
+            items[ele.id] = {
+                name: ele.name,
+                desc: ele.desc.replaceAll('\n','<br/>')
+            }
         });
-
-        respTxt += `</div>`;
-        res.setHeader('Content-Type', 'application/json');
-        res.send(JSON.stringify({count: count, data: respTxt}));
-
+       
+        var outputLocation = path.resolve(__dirname, itemInfoFileName);
+        fs.writeFile(outputLocation, JSON.stringify(items, null, 4), function(err) {
+            if(err) {
+                console.log(err);
+            } else {
+                console.log("JSON saved to "+outputLocation);
+            }
+        });
+        
     }).catch((err) => {
-        console.error(err);
-        res.setHeader('Content-Type', 'application/json');
-        res.send(JSON.stringify({data: 'Error'}));
-    })
+        console.log(err);
+    });
+
 
 });
 
@@ -56,6 +105,8 @@ app.listen(port, () => {
 });
 
 exports.app = functions.https.onRequest(app)
+
+
 
 /** Filter by input parameters */
 function filterResults(item, param){
@@ -179,14 +230,13 @@ function tranformData(item){
     itemDetailTxt += `<div class="${colStyle} px-1 py-1">`;
     itemDetailTxt += `<div class="card">`;
 
+    /** Header */
     itemDetailTxt += `<h5 class="card-header">`;
     itemDetailTxt += `${item.id} - <b>${itemName}</b> - ราคา: <b>${item.price} ION </b>`;
     itemDetailTxt += `</h5>`;
 
-
+    /** Body */
     itemDetailTxt += `<div class="card-body">`;
-
-    
     itemDetailTxt += `<ul class="list-group list-group-flush">`;
     
     /** First section */
@@ -204,6 +254,7 @@ function tranformData(item){
             itemDetailTxt += `Defense: ${item.nft.defense}</br>`;
 
         }else if(item.nft.type == 'Weapon'){
+            
             level = `Weapon Level: ${item.nft.weaponLevel}`;
             
             itemDetailTxt += `Atk: ${item.nft.attack}</br>`;
@@ -244,15 +295,24 @@ function tranformData(item){
         }
 
         itemDetailTxt += ` </ul>`;
-        
     }
+
+    itemDetailTxt += 
+        `   <button class="btn btn-outline-info btn-sm mt-1" type="button" data-toggle="collapse" data-target="#itemInfo${item.id}" aria-expanded="false" aria-controls="itemInfo${item.id}">
+                คลิกเพื่อดูรายละเอียดไอเทม
+            </button>
+            <a href="${apiBaseUrl}/roverse/detail/${item.id}" class="float-right btn btn-outline-primary btn-sm mt-1 ms-3" target="_blank">View/Buy</a>
+                <div class="collapse" id="itemInfo${item.id}">
+                    <div class="card card-body">
+                        ${itemInfo[item.nft.nameid].desc}
+                    </div>
+                </div>`;
 
     // if(view != null){
     //     itemDetailTxt += `<p class="text-right mt-2">คนเข้าดู ${view} View</p>`;
     // }
 
-    itemDetailTxt += `<p class="text-right mt-1"><a href="${apiBaseUrl}/roverse/detail/${item.id}" class="btn btn-outline-primary" target="_blank">View/Buy</a></p>`;
-    
+
     itemDetailTxt += `</div>`;
     itemDetailTxt += `</div>`;
     itemDetailTxt += `</div>`;
