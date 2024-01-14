@@ -32,7 +32,7 @@ app.get('/api/search', (req, res) => {
     console.log('Requesting...')
 
     fs.readFile(`./${itemInfoFileName}`, "utf8", (error, data) => {
-        console.log('read file')
+        console.log('read item')
 
         if (error) {
             console.log(error);
@@ -71,13 +71,13 @@ app.get('/api/search', (req, res) => {
 
 app.get('/api/loaditeminfo', (req, res) => {
 
+    console.log('loading item...')
+
     axios.request({
         method: "GET",
         url: itemInfoUrl
     }).then((resp) => {
-
-        console.log('item loaded')
-        
+       
         let items = {};
         resp.data.forEach((ele) => {
             items[ele.id] = {
@@ -85,15 +85,18 @@ app.get('/api/loaditeminfo', (req, res) => {
                 desc: ele.desc.replaceAll('\n','<br/>')
             }
         });
-       
+
         var outputLocation = path.resolve(itemInfoFileName);
         fs.writeFile(outputLocation, JSON.stringify(items, null, 4), function(err) {
             if(err) {
                 console.log(err);
+                res.send(JSON.stringify({result: 'failed', error: err}));
             } else {
                 console.log("JSON saved to "+outputLocation);
+                res.send(JSON.stringify({result: 'success', location: outputLocation}));
             }
         });
+        
         
     }).catch((err) => {
         console.log(err);
@@ -224,9 +227,9 @@ function tranformData(item){
         itemName += `[${item.nft.slots}]`;
     }
 
-    let colStyle = `col-sm-4`;
+    let colStyle = `col-sm-6 col-md-4`;
     if(item.nft.type == 'Card'){
-        colStyle = `col-sm-3`;
+        colStyle = `col-sm-12 col-md-3`;
     }
 
     itemDetailTxt += `<div class="${colStyle} px-1 py-1">`;
@@ -268,7 +271,7 @@ function tranformData(item){
         /** Second section */
         itemDetailTxt += `<li class="list-group-item">`;
 
-        itemDetailTxt += `<p> ออป`;
+        itemDetailTxt += `<p> Enchant`;
         
         if(item.nft.option0Text){
             itemDetailTxt += `</p>`;
@@ -283,7 +286,7 @@ function tranformData(item){
 
         /** Third section */
         itemDetailTxt += `</li><li class="list-group-item">`;
-        itemDetailTxt += `<p> การ์ด`;
+        itemDetailTxt += `<p> Card`;
         
 
         if(item.nft.card0Name){
@@ -301,7 +304,7 @@ function tranformData(item){
 
     itemDetailTxt += 
         `   <button class="btn btn-outline-info btn-sm mt-1" type="button" data-toggle="collapse" data-target="#itemInfo${item.id}" aria-expanded="false" aria-controls="itemInfo${item.id}">
-                คลิกเพื่อดูรายละเอียดไอเทม
+                View Item Detail
             </button>
             <a href="${apiBaseUrl}/roverse/detail/${item.id}" class="float-right btn btn-outline-primary btn-sm mt-1 ms-3" target="_blank">View/Buy</a>
                 <div class="collapse" id="itemInfo${item.id}">
