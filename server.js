@@ -19,6 +19,8 @@ var itemInfo = {};
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+app.use('/img', express.static(__dirname + '/public/images'));
+
 // Serve HTML file
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
