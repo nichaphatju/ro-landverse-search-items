@@ -9,6 +9,7 @@ Cheerio
 # To run project
 
 `npm start`
+`npm startwatch`
 
 # Hosting
 
