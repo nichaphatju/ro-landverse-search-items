@@ -75,6 +75,8 @@ app.get('/api/loaditeminfo', (req, res) => {
         method: "GET",
         url: itemInfoUrl
     }).then((resp) => {
+
+        console.log('item loaded')
         
         let items = {};
         resp.data.forEach((ele) => {
@@ -84,7 +86,7 @@ app.get('/api/loaditeminfo', (req, res) => {
             }
         });
        
-        var outputLocation = path.resolve(__dirname, itemInfoFileName);
+        var outputLocation = path.resolve(itemInfoFileName);
         fs.writeFile(outputLocation, JSON.stringify(items, null, 4), function(err) {
             if(err) {
                 console.log(err);
