@@ -331,3 +331,6 @@ function formatDate(date) {
     var strTime = hours + ':' + minutes + ' ' + ampm;
     return (date.getMonth()+1) + "/" + date.getDate() + "/" + date.getFullYear() + "  " + strTime;
 }
+
+//TEST UPLOAD
+//TEST UPLOAD2 JAA
