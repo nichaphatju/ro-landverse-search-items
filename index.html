@@ -173,8 +173,13 @@
       fetch(`/api/loaditeminfo`)
         .then(response => response.json())
         .then(data => {
-          
-          console.log('loaded completed.')
+
+          if(data.result == 'success'){
+            console.log('loaded completed.');
+          }else{
+            console.error(data.error);
+          }
+
         })
         .catch(error => console.error('Error:', error));
     }
