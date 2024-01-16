@@ -42,6 +42,13 @@ app.get('/api/search', (req, res) => {
             itemInfo = JSON.parse(data);
         }
 
+
+        //ใช้ decodeURI แล้วถ้ากรอก % มามัน error (กรอก Spacebar แล้วเป็น %20)
+        param.ops1 = param.ops1.replaceAll("%20"," ");
+        param.ops2 = param.ops2.replaceAll("%20"," ");
+        console.log("Option 1 : " + param.ops1.toString());
+        console.log("Option 2 : " + param.ops2.toString());
+
         axios.get(`${apiBaseUrl}${marketAPIPath}?status=LISTING&category=${param.category}&serverId=${param.sv}`).then((resp) => {
 
             let respTxt = '';
@@ -152,16 +159,29 @@ function filterResults(item, param){
 
     if(param.enchantopt != 'n'){
                
-        if(param.ops && param.ops != null && param.ops !== undefined){
-            let isEnchantWanted = op0.includes(param.ops.toLowerCase()) ||
-                                    op1.includes(param.ops.toLowerCase()) ||
-                                    op2.includes(param.ops.toLowerCase()) ||
-                                    op3.includes(param.ops.toLowerCase()) ||
-                                    op4.includes(param.ops.toLowerCase()) ;
-            if(!isEnchantWanted){
-                return false;
-            }
+        //===================== Code การหา Option เก่า =================
+        // if(param.ops && param.ops != null && param.ops !== undefined){
+        //     let isEnchantWanted = op0.includes(param.ops.toLowerCase()) ||
+        //                             op1.includes(param.ops.toLowerCase()) ||
+        //                             op2.includes(param.ops.toLowerCase()) ||
+        //                             op3.includes(param.ops.toLowerCase()) ||
+        //                             op4.includes(param.ops.toLowerCase()) ;
+        //     if(!isEnchantWanted){
+        //         return false;
+        //     }
+        // }
+        //==============================================================
+
+
+        //================== แก้ไข การหา Option 1 และ 2 =================
+        if(param.ops1 && param.ops1 != null && param.ops1 !== undefined){
+            return op0.includes(param.ops1.toLowerCase());
         }
+
+        if(param.ops2 && param.ops2 != null && param.ops2 !== undefined){
+            return op1.includes(option2.toLowerCase());
+        }
+        //==============================================================
 
         if(param.enchantopt == 'y'){
             if(opt.length == 0){
