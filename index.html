@@ -45,7 +45,15 @@
               <div class="form-group form-inline">
                 <label for="subtype">Sub Type:</label>
                   <select name="subtype" id="subtype"  class="form-control form-control-sm mx-sm-3">
+                    <option value="all" selected>All</option>
                   </select>
+              </div>
+
+              <div class="form-group form-inline">
+                <label for="refine">Refinement:</label>
+                <select name="refine" id="refine" class="form-control form-control-sm mx-sm-3">
+                  <option value="all" selected>All</option>
+                </select>
               </div>
 
               <div class="form-group form-inline">
@@ -60,7 +68,14 @@
           <div class="row mx-1">
             
               <div class="form-group form-inline">
-                <label for="opts">Enchant:</label>
+                <label for="enchantOpt">Enchant Option:</label>
+                <select name="enchantOpt" id="enchantOpt" class="form-control form-control-sm mx-sm-3">
+                    <option value="all" selected>All</option>
+                </select>
+              </div>
+              
+              <div class="form-group form-inline">
+                <label for="opts">Enchant Detail:</label>
                 <input type="text" id="opts" name="opts" placeholder="Enter enchant" class="form-control form-control-sm mx-sm-3">
               </div>
 
@@ -83,6 +98,15 @@
                 <input type="number" id="maxprice" name="maxprice" placeholder="Enter Max Price" class="form-control form-control-sm mx-sm-3">
               </div>
 
+              <div class="form-group form-inline">
+                <label for="sortOpt">Sort By:</label>
+                <select name="sortOpt" id="sortOpt" class="form-control form-control-sm mx-sm-3">
+                    <option value="0" selected>Default</option>
+                    <option value="1">ราคาถูกสุด</option>
+                    <option value="2">ราคาสูงสุด</option>
+                </select>
+              </div>
+
             <div class="form-group col-sm-2 form-inline">
               <button type="button" onclick="search()" class="btn btn-primary btn-sm mx-1">Search</button>
               <button type="button" onclick="clearForm()" class="btn btn-outline-primary btn-sm">Clear</button>
@@ -99,12 +123,30 @@
 
   <script>
     var categorySubTypes = {
-        "weapon": ["All", "Knuckle", "Sword", "Spear", "Mace", "Katar", "Staff", "Book", "Dagger"],
-        "headgear": ["All", "Upper", "Middle", "Lower", "UpperMid", "MidLow", "UpperLow", "UpperMidLow"],
-        "armor": ["All"],
-        "card": ["All"] ,
-        "shadowgear": ["All"],
-        "costume": ["All"]
+        "weapon": ["Knuckle", "Sword", "Spear", "Mace", "Katar", "Staff", "Book", "Dagger"],
+        "headgear": ["Upper", "Middle", "Lower", "UpperMid", "MidLow", "UpperLow", "UpperMidLow"],
+        "armor": [],
+        "card": [] ,
+        "shadowgear": [],
+        "costume": []
+    }
+
+    var refinementOptions = {
+      "weapon": [ {label: "0", value: 0}, {label: "1+", value: 1}, , {label: "5+", value: 5}, , {label: "7+", value: 7}],
+      "headgear": [{label: "0", value: 0}, {label: "1+", value: 1}, , {label: "5+", value: 5}, , {label: "7+", value: 7}],
+      "armor": [{label: "0", value: 0}, {label: "1+", value: 1}, , {label: "5+", value: 5}, , {label: "7+", value: 7}],
+      "card": [] ,
+      "shadowgear": [ {label: "0", value: 0}, {label: "1+", value: 1}, , {label: "5+", value: 5}, , {label: "7+", value: 7}],
+      "costume": []
+    }
+
+    var enchantOptions = {
+      "weapon": [ {label: "Yes", value: 'y'}, {label: "No", value: 'n'}],
+      "headgear": [{label: "Yes", value: 'y'}, {label: "No", value: 'n'}],
+      "armor": [{label: "Yes", value: 'y'}, {label: "No", value: 'n'}],
+      "card": [] ,
+      "shadowgear": [ {label: "Yes", value: 'y'}, {label: "No", value: 'n'}],
+      "costume": [{label: "Yes", value: 'y'}, {label: "No", value: 'n'}]
     }
 
     var jobs = ["Any", "All", "Acolyte", "Alchemist", "Archer", "Assassin", "Barddancer", "Blacksmith", 
@@ -115,6 +157,8 @@
     window.addEventListener('load', function() {
         var category = document.getElementById("category");
         var subtype = document.getElementById("subtype");
+        var refine = document.getElementById("refine");
+        var enchantOpt = document.getElementById("enchantOpt");
 
         jobs.forEach(opt => {
             job.options[job.options.length] = new Option(opt, opt);
@@ -124,12 +168,28 @@
             subtype.options[subtype.options.length] = new Option(opt, opt);
         });
 
-        category.onchange = function() {
+        refinementOptions['headgear'].forEach(opt => {
+          refine.options[refine.options.length] = new Option(opt.label, opt.value);
+        });
 
+        enchantOptions['headgear'].forEach(opt => {
+          enchantOpt.options[enchantOpt.options.length] = new Option(opt.label, opt.value);
+        });
+
+        category.onchange = function() {
             subtype.length = 1;
-            //display correct values
             categorySubTypes[category.value].forEach(opt => {
                 subtype.options[subtype.options.length] = new Option(opt, opt);
+            });
+
+            refine.length = 1;
+            refinementOptions[category.value].forEach(opt => {
+              refine.options[refine.options.length] = new Option(opt.label, opt.value);
+            });
+
+            enchantOpt.length = 1;
+            enchantOptions[category.value].forEach(opt => {
+              enchantOpt.options[enchantOpt.options.length] = new Option(opt.label, opt.value);
             });
         }
     });
@@ -149,12 +209,15 @@
       const maxprice = document.getElementById('maxprice').value;
       const subtype = document.getElementById('subtype').value;
       const job = document.getElementById('job').value;
+      const refine = document.getElementById('refine').value;
+      const enchantOpt = document.getElementById('enchantOpt').value;
+      const sortOpt = document.getElementById('sortOpt').value;
 
       const resultDiv = document.getElementById('result');
 
       resultDiv.innerHTML = `<br/> Searching ${category}...`;
 
-      fetch(`/api/search?name=${name}&category=${category}&sv=${sv}&minprice=${minprice}&maxprice=${maxprice}&ops=${opts}&card=${card}&subtype=${subtype}&job=${job}`)
+      fetch(`/api/search?name=${name}&category=${category}&sv=${sv}&minprice=${minprice}&maxprice=${maxprice}&ops=${opts}&card=${card}&subtype=${subtype}&job=${job}&refine=${refine}&enchantopt=${enchantOpt}&sort=${sortOpt}`)
         .then(response => response.json())
         .then(data => {
           

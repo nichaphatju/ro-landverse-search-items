@@ -48,6 +48,17 @@ app.get('/api/search', (req, res) => {
             let count = 0;
     
             respTxt += `<div class="row">`;
+
+            if(param.sort != 0){
+                resp.data.sort((a,b) => {
+                    if(param.sort == 1){
+                        return a.price - b.price;
+                    }else if(param.sort == 2){
+                        return b.price - a.price;
+                    }
+                });
+            }
+
             resp.data.forEach(ele => {
             
                 if(filterResults(ele, param)){
@@ -137,16 +148,34 @@ function filterResults(item, param){
         op3 += item.nft.card3Name ? item.nft.card3Name.toLowerCase() : '';
     }
 
-    if(param.ops && param.ops != null && param.ops !== undefined){
-        let isEnchantWanted = op0.includes(param.ops.toLowerCase()) ||
-                                op1.includes(param.ops.toLowerCase()) ||
-                                op2.includes(param.ops.toLowerCase()) ||
-                                op3.includes(param.ops.toLowerCase()) ||
-                                op4.includes(param.ops.toLowerCase()) ;
-        if(!isEnchantWanted){
+    let opt = `${op0}${op1}${op2}${op3}${op4}`;
+
+    if(param.enchantopt != 'n'){
+               
+        if(param.ops && param.ops != null && param.ops !== undefined){
+            let isEnchantWanted = op0.includes(param.ops.toLowerCase()) ||
+                                    op1.includes(param.ops.toLowerCase()) ||
+                                    op2.includes(param.ops.toLowerCase()) ||
+                                    op3.includes(param.ops.toLowerCase()) ||
+                                    op4.includes(param.ops.toLowerCase()) ;
+            if(!isEnchantWanted){
+                return false;
+            }
+        }
+
+        if(param.enchantopt == 'y'){
+            if(opt.length == 0){
+                return false;
+            }
+        }
+
+    }else{
+        
+        if(opt.length > 0){
             return false;
         }
     }
+
     
     if(param.minprice && param.minprice != null && param.minprice !== undefined){
         if(Number(item.price) < Number(param.minprice)){
@@ -174,7 +203,7 @@ function filterResults(item, param){
     //     "shadowgear": ["All"],
     //     "costume": ["All"]
 
-    if(param.subtype && param.subtype != 'All'){
+    if(param.subtype && param.subtype != 'all'){
         let subtypeCompare = param.subtype.toLowerCase();
         let subtypeItem = item.nft.subtype ? item.nft.subtype.toLowerCase() : '';
         if(param.category == 'weapon'){
@@ -210,15 +239,26 @@ function filterResults(item, param){
         }
     });
 
-    if(item.nft.type == 'Armor' || item.nft.type == 'Weapon'){
+    if(item.nft.type == 'Armor' || item.nft.type == 'Weapon' || item.nft.type == 'Shadowgear'){
         if(param.job != 'Any' && !isNoRequirement){
             let jobAttr = `job${param.job}`;
             if(item.nft['jobAll'] != 1 && item.nft[jobAttr] != 1){
                 return false;
             }
         }
+
+        if(param.refine != 'all'){
+            if(param.refine == 0){
+                if(Number(item.nft.refine) > 0){
+                    return false;
+                }
+            }else if(item.nft.refine < param.refine){
+                return false;
+            }
+        }
+        
     }
-    
+
 
     return true;
 }
@@ -227,7 +267,7 @@ function tranformData(item){
     let itemDetailTxt = '';
     let itemName = item.nft.nameEnglish;
 
-    let createdAt = formatDate(new Date(item.nft.createdAt));
+    let createdAt = formatDate(new Date(item.createdAt));
     let view = item.nft.view ? item.nft.view : null;
 
     let currentItemInfo = itemInfo[item.nft.nameid];
@@ -317,7 +357,12 @@ function tranformData(item){
         itemDetailTxt += `<p class="my-2"><b>Collection Effect</b>${cardCollectionEffect}</p>`;
     }
 
-    itemDetailTxt += 
+    if(item.nft.type == 'Shadowgear'){
+        itemDetailTxt += `</br><p> <b>Item Detail</b> </p>`;
+        itemDetailTxt += `<p style="height:10rem; overflow:scroll" >${currentItemInfo.desc}</br></p>`;
+        itemDetailTxt += `<a href="${apiBaseUrl}/roverse/detail/${item.id}" class="float-right btn btn-outline-primary btn-sm mt-1 ms-3" target="_blank">View/Buy</a>`;
+    }else{
+        itemDetailTxt += 
         `   <button class="btn btn-outline-info btn-sm mt-1" type="button" data-toggle="collapse" data-target="#itemInfo${item.id}" aria-expanded="false" aria-controls="itemInfo${item.id}">
                 View Item Detail
             </button>
@@ -327,6 +372,7 @@ function tranformData(item){
                         ${currentItemInfo.desc.replaceAll(`Collection Effect${cardCollectionEffect}`, '')}
                     </div>
                 </div>`;
+    }
 
     // if(view != null){
     //     itemDetailTxt += `<p class="text-right mt-2">คนเข้าดู ${view} View</p>`;
