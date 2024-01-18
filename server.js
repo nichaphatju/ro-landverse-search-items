@@ -207,12 +207,15 @@ function filterResults(item, param){
                         (param.ops2==item.nft.optionId0) && (param.ops1==item.nft.optionId1)
                       )
                     {
-                        status = false;
+                        status = true;
                     }
                 }
     
-                
-                return status;
+                if(!status)
+                {
+                    return false;
+                }
+               
                 
         }
         else if(param.ops1 && param.ops1 != null && param.ops1 !== undefined)
@@ -220,11 +223,6 @@ function filterResults(item, param){
             var status = false;
             //กรณีกรอกมาแต่ Param 1
             console.log("CASE : 2")
-            if(param.ops1==item.nft.optionId0)
-            {
-                status = true;
-            }
-
             switch (param.ops1) {
                 case item.nft.optionId0:
                 case item.nft.optionId1:
