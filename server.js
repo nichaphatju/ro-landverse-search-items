@@ -285,7 +285,12 @@ function filterResults(item, param){
 
 function tranformData(item){
     let itemDetailTxt = '';
-    let itemName = item.nft.nameEnglish;
+
+    let itemName = '';
+    if(item.nft.attribute == 2){
+        itemName += `<p style="color:red; display:inline">Broken </p>`;
+    }
+    itemName += item.nft.nameEnglish;
 
     let createdAt = formatDate(new Date(item.createdAt));
     let view = item.nft.view ? item.nft.view : null;
@@ -318,6 +323,7 @@ function tranformData(item){
     
     /** First section */
     itemDetailTxt += `<li class="list-group-item">`;
+    
     // itemDetailTxt += `<p>${item.id} - <b>${itemName}</b> </p>`;
     itemDetailTxt += `ราคาเปิดขาย: ${item.initialPrice} ION</br>`;
     itemDetailTxt += `สร้างเมื่อ ${createdAt}</br>`;
@@ -339,6 +345,7 @@ function tranformData(item){
         }
 
         itemDetailTxt += `${level}</br>`;
+        
 
         /** Second section */
         itemDetailTxt += `<li class="list-group-item">`;
