@@ -74,15 +74,28 @@
                 </select>
               </div>
               
-              <div class="form-group form-inline">
+              <!-- <div class="form-group form-inline">
                 <label for="opts1">Enchant 1:</label>
                 <input type="text" id="opts1" name="opts1" placeholder="Enter enchant 1" class="form-control form-control-sm mx-sm-3">
-              </div>
+              </div> -->
 
               <div class="form-group form-inline">
+                <label for="opts1">Enchant 1:</label>
+                  <select name="opts1" id="opts1" class="form-control form-control-sm mx-sm-3">
+                  </select>
+              </div>
+
+              
+              <div class="form-group form-inline">
+                <label for="opts2">Enchant 2:</label>
+                  <select name="opts2" id="opts2" class="form-control form-control-sm mx-sm-3">
+                  </select>
+              </div>
+
+              <!-- <div class="form-group form-inline">
                 <label for="opts2">Enchant 2:</label>
                 <input type="text" id="opts2" name="opts2" placeholder="Enter enchant 2" class="form-control form-control-sm mx-sm-3">
-              </div>
+              </div> -->
 
               <div class="form-group form-inline">
                 <label for="card">Card:</label>
@@ -159,14 +172,67 @@
                 "Ninja", "Novice", "Priest", "Rebellion", "Rogue", "Sage", "Soullinker", "Stargladiator", 
                 "Summoner", "Supernovice", "Swordman", "Taekwon", "Thief", "Wizard"]
 
+    var opts = [
+                          { value: "", label: ""}
+                        , { value: "1007", label: "Variable cast time" }
+                        , { value: "1008", label: "After cast delay" }
+                        , { value: "1001", label: "Reduces SP cost of skill" }
+                        , { value: "168", label: "Healing skills" }
+                        , { value: "11", label: "HP regen" }
+                        , { value: "1009", label: "Increase SP consumption" }
+                        , { value: "1000", label: "Absorbs hp from damage" }
+                        , { value: "1001", label: "Absorbs sp from damage" }
+                        , { value: "1002", label: "Drain HP" }
+                        , { value: "1003", label: "Drain SP" }
+                        , { value: "16", label: "ASPD %" }
+                        , { value: "15", label: "ASPD +" }
+                        , { value: "24", label: "Critical Rate" }
+                        , { value: "1004", label: "Critical Damage" }
+                        , { value: "166", label: "Range Damage" }
+                        , { value: "17", label: "ATK +" }
+                        , { value: "19", label: "MATK +" }
+                        , { value: "13", label: "ATK %" }
+                        , { value: "14", label: "MATK %" }
+                        , { value: "18", label: "Hit" }
+                        , { value: "157", label: "ATK Small Size" }
+                        , { value: "187", label: "MATK Small Size" }
+                        , { value: "158", label: "ATK Medium Size" }
+                        , { value: "188", label: "MATK Medium Size" }
+                        , { value: "159", label: "ATK Large Size" }
+                        , { value: "189", label: "MATK Large Size" }
+                        , { value: "104", label: "ATK Demi-Human" }
+                        , { value: "114", label: "MATK Demi-Human" }
+                        , { value: "148", label: "ATK Boss" }
+                        , { value: "152", label: "MATK Boss" }
+                        , { value: "1005", label: "DEF %" }
+                        , { value: "1006", label: "MDEF %" }
+                        , { value: "160", label: "Reduce DMG from small size" }
+                        , { value: "161", label: "Reduce DMG from med size" }
+                        , { value: "162", label: "Reduce DMG from large size" }
+                        , { value: "94", label: "Reduce DMG from demihuman" }
+                        , { value: "150", label: "Reduce DMG from Boss" }
+                        , { value: "9", label: "Max HP" }
+                        , { value: "10", label: "Max SP" }
+                        , { value: "20", label: "DEF" }
+                        , { value: "21", label: "MDEF" }
+                        , { value: "22", label: "Flee" }
+                        , { value: "23", label: "Perfect Dodge" }
+                    ];
+
     window.addEventListener('load', function() {
         var category = document.getElementById("category");
         var subtype = document.getElementById("subtype");
         var refine = document.getElementById("refine");
         var enchantOpt = document.getElementById("enchantOpt");
+        var opts1 = document.getElementById("opts1");
 
         jobs.forEach(opt => {
             job.options[job.options.length] = new Option(opt, opt);
+        });
+
+        opts.forEach(opt => {
+          opts1.options[opts1.options.length] = new Option(opt.label, opt.value);
+          opts2.options[opts2.options.length] = new Option(opt.label, opt.value);
         });
 
         categorySubTypes['headgear'].forEach(opt => {
