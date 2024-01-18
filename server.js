@@ -42,6 +42,13 @@ app.get('/api/search', (req, res) => {
             itemInfo = JSON.parse(data);
         }
 
+
+        //ใช้ decodeURI แล้วถ้ากรอก % มามัน error (กรอก Spacebar แล้วเป็น %20)
+        param.ops1 = param.ops1.replaceAll("%20"," ");
+        param.ops2 = param.ops2.replaceAll("%20"," ");
+        console.log("Option 1 : " + param.ops1.toString());
+        console.log("Option 2 : " + param.ops2.toString());
+
         axios.get(`${apiBaseUrl}${marketAPIPath}?status=LISTING&category=${param.category}&serverId=${param.sv}`).then((resp) => {
 
             let respTxt = '';
@@ -140,6 +147,20 @@ function filterResults(item, param){
     let op3 = item.nft.option3Text ? item.nft.option3Text.toLowerCase() : '';
     let op4 = item.nft.option4Text ? item.nft.option4Text.toLowerCase() : '';
 
+    //console.log(item.nftId);
+    // if(item.nftId == "132285")
+    // {
+    //     console.log(op0);
+    //     console.log(op1);
+    //     console.log(op2);
+    //     console.log(op3);
+    //     console.log(op4);
+    // }
+    // else
+    // {
+    //     return false;
+    // }
+
     let isCostume = item.nft.locationCostumeHeadTop || item.nft.locationCostumeHeadMid || item.nft.locationCostumeHeadLow || item.nft.locationCostumeGarment;
     if(isCostume){
         op0 += item.nft.card0Name ? item.nft.card0Name.toLowerCase() : '';
@@ -151,17 +172,94 @@ function filterResults(item, param){
     let opt = `${op0}${op1}${op2}${op3}${op4}`;
 
     if(param.enchantopt != 'n'){
+             
+        //================== แก้ไข การหา Option 1 และ 2 =================
+        if(
+            (param.ops1 && param.ops1 != null && param.ops1 !== undefined) &&
+            (param.ops2 && param.ops2 != null && param.ops2 !== undefined)
+          )
+        {
+                var status = false;
+                console.log("CASE : 1")
+                console.log("ITEM OPTION 0 : " + op0 + " : " + param.ops1.toLowerCase())
+                console.log("ITEM OPTION 1 : " + op1 + " : " + param.ops2.toLowerCase())
+
+                //กรณีต้องการ 2 ออบเหมือนกัน
+                //เช็ค 2 ออบที่กรอกมาเหมือนกันไหม
+                if(param.ops1 == param.ops2)
+                {
+                    //เช็ค Item 2 ออบแรกเหมือนกันไหม
+                    if((item.nft.optionId0 == item.nft.optionId1) && (item.nft.optionId0 != "0" && item.nft.optionId1 != "0"))
+                    {
+                        //กรณีเหมือนคือ เช็คอีกทีว่าเป็นออบที่เราเลือกมาไหม
+                        if(param.ops1 == item.nft.optionId0 && param.ops2 == item.nft.optionId1)
+                        {
+                            //แสดงว่าเป็น Item ที่ต้องนำไปแสดง
+                            status = true
+                        }
+                    }
+                }
+                else
+                {
+                    //กรณี 2 ออบแรกไม่เหมือนกัน
+                    if(
+                        (param.ops1==item.nft.optionId0) && (param.ops2==item.nft.optionId1) || 
+                        (param.ops2==item.nft.optionId0) && (param.ops1==item.nft.optionId1)
+                      )
+                    {
+                        status = true;
+                    }
+                }
+    
+                if(!status)
+                {
+                    return false;
+                }
                
-        if(param.ops && param.ops != null && param.ops !== undefined){
-            let isEnchantWanted = op0.includes(param.ops.toLowerCase()) ||
-                                    op1.includes(param.ops.toLowerCase()) ||
-                                    op2.includes(param.ops.toLowerCase()) ||
-                                    op3.includes(param.ops.toLowerCase()) ||
-                                    op4.includes(param.ops.toLowerCase()) ;
-            if(!isEnchantWanted){
+                
+        }
+        else if(param.ops1 && param.ops1 != null && param.ops1 !== undefined)
+        {
+            var status = false;
+            //กรณีกรอกมาแต่ Param 1
+            console.log("CASE : 2")
+            switch (param.ops1) {
+                case item.nft.optionId0:
+                case item.nft.optionId1:
+                case item.nft.optionId2:
+                case item.nft.optionId3:
+                case item.nft.optionId4:
+                    status = true;
+                  break;
+              }
+
+            if(!status)
+            {
+                return false;
+            }
+
+        }
+        else if(param.ops2 && param.ops2 != null && param.ops2 !== undefined)
+        {
+            var status = false;
+            //กรณีกรอกมาแต่ Param 2
+            console.log("CASE : 3")
+            switch (param.ops2) {
+                case item.nft.optionId0:
+                case item.nft.optionId1:
+                case item.nft.optionId2:
+                case item.nft.optionId3:
+                case item.nft.optionId4:
+                    status = true;
+                  break;
+              }
+
+            if(!status)
+            {
                 return false;
             }
         }
+        //==============================================================
 
         if(param.enchantopt == 'y'){
             if(opt.length == 0){
@@ -290,7 +388,7 @@ function tranformData(item){
     }
 
     itemDetailTxt += `<div class="${colStyle} px-1 py-1">`;
-    itemDetailTxt += `<div class="card">`;
+    itemDetailTxt += `<div class="card border-dark">`;
 
     /** Header */
     itemDetailTxt += `<h5 class="card-header">`;
