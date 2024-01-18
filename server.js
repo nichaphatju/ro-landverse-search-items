@@ -179,7 +179,7 @@ function filterResults(item, param){
             (param.ops2 && param.ops2 != null && param.ops2 !== undefined)
           )
         {
-                var status = false;
+                let status = false;
                 console.log("CASE : 1")
                 console.log("ITEM OPTION 0 : " + op0 + " : " + param.ops1.toLowerCase())
                 console.log("ITEM OPTION 1 : " + op1 + " : " + param.ops2.toLowerCase())
@@ -220,17 +220,17 @@ function filterResults(item, param){
         }
         else if(param.ops1 && param.ops1 != null && param.ops1 !== undefined)
         {
-            var status = false;
+            let status = false;
             //กรณีกรอกมาแต่ Param 1
-            console.log("CASE : 2")
-            switch (param.ops1) {
+            console.log("CASE : 2 " + param.ops1)
+            switch (Number(param.ops1)) {
                 case item.nft.optionId0:
                 case item.nft.optionId1:
                 case item.nft.optionId2:
                 case item.nft.optionId3:
-                case item.nft.optionId4:
+                case item.nft.optionId4: 
                     status = true;
-                  break;
+                    break;
               }
 
             if(!status)
@@ -241,10 +241,10 @@ function filterResults(item, param){
         }
         else if(param.ops2 && param.ops2 != null && param.ops2 !== undefined)
         {
-            var status = false;
+            let status = false;
             //กรณีกรอกมาแต่ Param 2
             console.log("CASE : 3")
-            switch (param.ops2) {
+            switch (Number(param.ops2)) {
                 case item.nft.optionId0:
                 case item.nft.optionId1:
                 case item.nft.optionId2:
