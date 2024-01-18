@@ -388,7 +388,7 @@ function tranformData(item){
     }
 
     itemDetailTxt += `<div class="${colStyle} px-1 py-1">`;
-    itemDetailTxt += `<div class="card">`;
+    itemDetailTxt += `<div class="card border-dark">`;
 
     /** Header */
     itemDetailTxt += `<h5 class="card-header">`;
