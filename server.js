@@ -223,7 +223,7 @@ function filterResults(item, param){
             var status = false;
             //กรณีกรอกมาแต่ Param 1
             console.log("CASE : 2")
-            switch (param.ops1) {
+            switch (Number(param.ops1)) {
                 case item.nft.optionId0:
                 case item.nft.optionId1:
                 case item.nft.optionId2:
@@ -244,7 +244,7 @@ function filterResults(item, param){
             var status = false;
             //กรณีกรอกมาแต่ Param 2
             console.log("CASE : 3")
-            switch (param.ops2) {
+            switch (Number(param.ops2)) {
                 case item.nft.optionId0:
                 case item.nft.optionId1:
                 case item.nft.optionId2:
