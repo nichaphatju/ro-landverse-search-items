@@ -74,10 +74,28 @@
                 </select>
               </div>
               
+              <!-- <div class="form-group form-inline">
+                <label for="opts1">Enchant 1:</label>
+                <input type="text" id="opts1" name="opts1" placeholder="Enter enchant 1" class="form-control form-control-sm mx-sm-3">
+              </div> -->
+
               <div class="form-group form-inline">
-                <label for="opts">Enchant Detail:</label>
-                <input type="text" id="opts" name="opts" placeholder="Enter enchant" class="form-control form-control-sm mx-sm-3">
+                <label for="opts1">Enchant 1:</label>
+                  <select name="opts1" id="opts1" class="form-control form-control-sm mx-sm-3">
+                  </select>
               </div>
+
+              
+              <div class="form-group form-inline">
+                <label for="opts2">Enchant 2:</label>
+                  <select name="opts2" id="opts2" class="form-control form-control-sm mx-sm-3">
+                  </select>
+              </div>
+
+              <!-- <div class="form-group form-inline">
+                <label for="opts2">Enchant 2:</label>
+                <input type="text" id="opts2" name="opts2" placeholder="Enter enchant 2" class="form-control form-control-sm mx-sm-3">
+              </div> -->
 
               <div class="form-group form-inline">
                 <label for="card">Card:</label>
@@ -86,6 +104,11 @@
                     <option value="y">Yes</option>
                     <option value="n">No</option>
                 </select>
+              </div>
+
+              <div class="form-group form-inline">
+                <label id="cardNameLabel" for="cardname">Card Name:</label>
+                <input type="text" id="cardname" name="cardname" class="form-control form-control-sm mx-sm-3">
               </div>
 
               <div class="form-group form-inline">
@@ -154,14 +177,68 @@
                 "Ninja", "Novice", "Priest", "Rebellion", "Rogue", "Sage", "Soullinker", "Stargladiator", 
                 "Summoner", "Supernovice", "Swordman", "Taekwon", "Thief", "Wizard"]
 
+    var opts = [
+                          { value: "", label: "Any"}
+                        , { value: "1007", label: "Variable cast time" }
+                        , { value: "1008", label: "After cast delay" }
+                        , { value: "1001", label: "Reduces SP cost of skill" }
+                        , { value: "168", label: "Healing skills" }
+                        , { value: "11", label: "HP regen" }
+                        , { value: "1009", label: "Increase SP consumption" }
+                        , { value: "1000", label: "Absorbs hp from damage" }
+                        , { value: "1001", label: "Absorbs sp from damage" }
+                        , { value: "1002", label: "Drain HP" }
+                        , { value: "1003", label: "Drain SP" }
+                        , { value: "16", label: "ASPD %" }
+                        , { value: "15", label: "ASPD +" }
+                        , { value: "24", label: "Critical Rate" }
+                        , { value: "1004", label: "Critical Damage" }
+                        , { value: "166", label: "Range Damage" }
+                        , { value: "17", label: "ATK +" }
+                        , { value: "19", label: "MATK +" }
+                        , { value: "13", label: "ATK %" }
+                        , { value: "14", label: "MATK %" }
+                        , { value: "18", label: "Hit" }
+                        , { value: "157", label: "ATK Small Size" }
+                        , { value: "187", label: "MATK Small Size" }
+                        , { value: "158", label: "ATK Medium Size" }
+                        , { value: "188", label: "MATK Medium Size" }
+                        , { value: "159", label: "ATK Large Size" }
+                        , { value: "189", label: "MATK Large Size" }
+                        , { value: "104", label: "ATK Demi-Human" }
+                        , { value: "114", label: "MATK Demi-Human" }
+                        , { value: "148", label: "ATK Boss" }
+                        , { value: "152", label: "MATK Boss" }
+                        , { value: "1005", label: "DEF %" }
+                        , { value: "1006", label: "MDEF %" }
+                        , { value: "160", label: "Reduce DMG from small size" }
+                        , { value: "161", label: "Reduce DMG from med size" }
+                        , { value: "162", label: "Reduce DMG from large size" }
+                        , { value: "94", label: "Reduce DMG from demihuman" }
+                        , { value: "150", label: "Reduce DMG from Boss" }
+                        , { value: "9", label: "Max HP" }
+                        , { value: "10", label: "Max SP" }
+                        , { value: "20", label: "DEF" }
+                        , { value: "21", label: "MDEF" }
+                        , { value: "22", label: "Flee" }
+                        , { value: "23", label: "Perfect Dodge" }
+                    ];
+
     window.addEventListener('load', function() {
         var category = document.getElementById("category");
         var subtype = document.getElementById("subtype");
         var refine = document.getElementById("refine");
         var enchantOpt = document.getElementById("enchantOpt");
+        var opts1 = document.getElementById("opts1");
+        var opts2 = document.getElementById("opts2");
 
         jobs.forEach(opt => {
             job.options[job.options.length] = new Option(opt, opt);
+        });
+
+        opts.forEach(opt => {
+          opts1.options[opts1.options.length] = new Option(opt.label, opt.value);
+          opts2.options[opts2.options.length] = new Option(opt.label, opt.value);
         });
 
         categorySubTypes['headgear'].forEach(opt => {
@@ -177,6 +254,8 @@
         });
 
         category.onchange = function() {
+            var event = new Event('change');
+
             subtype.length = 1;
             categorySubTypes[category.value].forEach(opt => {
                 subtype.options[subtype.options.length] = new Option(opt, opt);
@@ -186,13 +265,48 @@
             refinementOptions[category.value].forEach(opt => {
               refine.options[refine.options.length] = new Option(opt.label, opt.value);
             });
-
+            
             enchantOpt.length = 1;
+            enchantOpt.dispatchEvent(event);
             enchantOptions[category.value].forEach(opt => {
               enchantOpt.options[enchantOpt.options.length] = new Option(opt.label, opt.value);
             });
+
+            if(category.value == 'costume'){
+              document.getElementById('cardNameLabel').innerHTML = 'Costume Enchant:';
+            }else{
+              document.getElementById('cardNameLabel').innerHTML = 'Card Name:';
+            }
+
+            setEnchantOptions();
         }
+
+        enchantOpt.onchange = function() {
+          setEnchantOptions();
+        }
+
     });
+
+    function setEnchantOptions(){
+      var category = document.getElementById("category");
+      var enchantOpt = document.getElementById("enchantOpt");
+      var opts1 = document.getElementById("opts1");
+      var opts2 = document.getElementById("opts2");
+
+      if(enchantOpt.value != 'n' && (category.value == 'headgear' || category.value == 'armor')){
+        opts1.length = 0;
+        opts2.length = 0;
+        opts.forEach(opt => {
+          opts1.options[opts1.options.length] = new Option(opt.label, opt.value);
+          opts2.options[opts2.options.length] = new Option(opt.label, opt.value);
+        });
+      }else{
+        opts1.length = 1;
+        opts2.length = 1;
+        opts1.options[0] = new Option('None', '');
+        opts2.options[0] = new Option('None', '');
+      }
+    }
 
     function clearForm() {
         document.getElementById("searchForm").reset();
@@ -202,9 +316,11 @@
     function search() {
       const name = document.getElementById('name').value;
       const category = document.getElementById('category').value;
-      const opts = document.getElementById('opts').value;
+      const opts1 = document.getElementById('opts1').value;
+      const opts2 = document.getElementById('opts2').value;
       const sv = document.getElementById('server').value;
       const card = document.getElementById('card').value;
+      const cardname = document.getElementById('cardname').value;
       const minprice = document.getElementById('minprice').value;
       const maxprice = document.getElementById('maxprice').value;
       const subtype = document.getElementById('subtype').value;
@@ -217,7 +333,7 @@
 
       resultDiv.innerHTML = `<br/> Searching ${category}...`;
 
-      fetch(`/api/search?name=${name}&category=${category}&sv=${sv}&minprice=${minprice}&maxprice=${maxprice}&ops=${opts}&card=${card}&subtype=${subtype}&job=${job}&refine=${refine}&enchantopt=${enchantOpt}&sort=${sortOpt}`)
+      fetch(`/api/search?name=${name}&category=${category}&sv=${sv}&minprice=${minprice}&maxprice=${maxprice}&ops1=${opts1}&ops2=${opts2}&card=${card}&cardname=${cardname}&subtype=${subtype}&job=${job}&refine=${refine}&enchantopt=${enchantOpt}&sort=${sortOpt}`)
         .then(response => response.json())
         .then(data => {
           
