@@ -178,7 +178,7 @@
                 "Summoner", "Supernovice", "Swordman", "Taekwon", "Thief", "Wizard"]
 
     var opts = [
-                          { value: "", label: ""}
+                          { value: "", label: "Any"}
                         , { value: "1007", label: "Variable cast time" }
                         , { value: "1008", label: "After cast delay" }
                         , { value: "1001", label: "Reduces SP cost of skill" }
@@ -230,6 +230,7 @@
         var refine = document.getElementById("refine");
         var enchantOpt = document.getElementById("enchantOpt");
         var opts1 = document.getElementById("opts1");
+        var opts2 = document.getElementById("opts2");
 
         jobs.forEach(opt => {
             job.options[job.options.length] = new Option(opt, opt);
@@ -253,6 +254,8 @@
         });
 
         category.onchange = function() {
+            var event = new Event('change');
+
             subtype.length = 1;
             categorySubTypes[category.value].forEach(opt => {
                 subtype.options[subtype.options.length] = new Option(opt, opt);
@@ -264,10 +267,29 @@
             });
 
             enchantOpt.length = 1;
+            enchantOpt.dispatchEvent(event);
             enchantOptions[category.value].forEach(opt => {
               enchantOpt.options[enchantOpt.options.length] = new Option(opt.label, opt.value);
             });
         }
+
+        enchantOpt.onchange = function() {
+
+          if(enchantOpt.value != 'n' ){
+            opts1.length = 0;
+            opts2.length = 0;
+            opts.forEach(opt => {
+              opts1.options[opts1.options.length] = new Option(opt.label, opt.value);
+              opts2.options[opts2.options.length] = new Option(opt.label, opt.value);
+            });
+          }else{
+            opts1.length = 1;
+            opts2.length = 1;
+            opts1.options[0] = new Option('None', '');
+            opts2.options[0] = new Option('None', '');
+          }
+      }
+
     });
 
     function clearForm() {
