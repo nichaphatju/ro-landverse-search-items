@@ -295,6 +295,28 @@ function filterResults(item, param){
         }
     }
 
+    //เช็ค Option ของ Costume
+    if(param.cardname != null && param.cardname != undefined && param.cardname != "")
+    {
+        //Convert null to ""
+        item.nft.card0Name = (item.nft.card0Name==null?"":item.nft.card0Name);
+        item.nft.card1Name = (item.nft.card1Name==null?"":item.nft.card1Name);
+        item.nft.card2Name = (item.nft.card2Name==null?"":item.nft.card2Name);
+        item.nft.card3Name = (item.nft.card3Name==null?"":item.nft.card3Name);
+
+        if(!(
+            item.nft.card0Name.toLowerCase().includes(param.cardname.toLowerCase()) ||
+            item.nft.card1Name.toLowerCase().includes(param.cardname.toLowerCase()) ||
+            item.nft.card2Name.toLowerCase().includes(param.cardname.toLowerCase()) ||
+            item.nft.card3Name.toLowerCase().includes(param.cardname.toLowerCase())
+            )
+          )
+        {
+            return false;
+        }
+        
+    }
+
     //     "headgear": ["All", "Upper", "Middle", "Lower", "UpperMid", "MidLow", "UpperLow", "UpperMidLow"],
     //     "armor": ["All", "Armor", "Shields", "Gaments", "Footgears", "Accessory"],
     //     "card": ["All", "Armor", "Headgear", "Weapon", "Shield", "Garment", "Footgear", "Accessory"] ,
