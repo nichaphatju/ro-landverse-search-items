@@ -332,7 +332,11 @@ function filterResults(item, param){
               break;
           }
 
-          return !status;
+          if(status)
+          {
+            return false;
+          }
+          
     }
 
     //     "headgear": ["All", "Upper", "Middle", "Lower", "UpperMid", "MidLow", "UpperLow", "UpperMidLow"],
