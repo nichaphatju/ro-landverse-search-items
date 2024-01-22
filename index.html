@@ -17,13 +17,6 @@
         
         <form id="searchForm" class="mt-1">
           <div class="row mx-1">
-              <div class="form-group form-inline">
-                <label for="server">Server: </label>
-                <select name="server" id="server" class="form-control form-control-sm mx-sm-3">
-                    <option value="1" selected>Hela</option>
-                    <option value="2">Freya</option>
-                </select>
-              </div>
 
               <div class="form-group form-inline">
                 <label for="name">Item Name:</label>
@@ -318,7 +311,6 @@
       const category = document.getElementById('category').value;
       const opts1 = document.getElementById('opts1').value;
       const opts2 = document.getElementById('opts2').value;
-      const sv = document.getElementById('server').value;
       const card = document.getElementById('card').value;
       const cardname = document.getElementById('cardname').value;
       const minprice = document.getElementById('minprice').value;
@@ -333,7 +325,7 @@
 
       resultDiv.innerHTML = `<br/> Searching ${category}...`;
 
-      fetch(`/api/search?name=${name}&category=${category}&sv=${sv}&minprice=${minprice}&maxprice=${maxprice}&ops1=${opts1}&ops2=${opts2}&card=${card}&cardname=${cardname}&subtype=${subtype}&job=${job}&refine=${refine}&enchantopt=${enchantOpt}&sort=${sortOpt}`)
+      fetch(`/api/search?name=${name}&category=${category}&minprice=${minprice}&maxprice=${maxprice}&ops1=${opts1}&ops2=${opts2}&card=${card}&cardname=${cardname}&subtype=${subtype}&job=${job}&refine=${refine}&enchantopt=${enchantOpt}&sort=${sortOpt}`)
         .then(response => response.json())
         .then(data => {
           
