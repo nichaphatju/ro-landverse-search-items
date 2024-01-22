@@ -49,7 +49,7 @@ app.get('/api/search', (req, res) => {
         // console.log("Option 1 : " + param.ops1.toString());
         // console.log("Option 2 : " + param.ops2.toString());
 
-        axios.get(`${apiBaseUrl}${marketAPIPath}?status=LISTING&category=${param.category}&serverId=${param.sv}`).then((resp) => {
+        axios.get(`${apiBaseUrl}${marketAPIPath}?status=LISTING&category=${param.category}`).then((resp) => {
 
             let respTxt = '';
             let count = 0;
