@@ -318,6 +318,23 @@ function filterResults(item, param){
         
     }
 
+    //เช็ค Except Option
+    if(param.exceptop != null && param.exceptop != undefined && param.exceptop != "")
+    {
+        var status = false;
+        switch (Number(param.exceptop)) {
+            case item.nft.optionId0:
+            case item.nft.optionId1:
+            case item.nft.optionId2:
+            case item.nft.optionId3:
+            case item.nft.optionId4:
+                status = true;
+              break;
+          }
+
+          return !status;
+    }
+
     //     "headgear": ["All", "Upper", "Middle", "Lower", "UpperMid", "MidLow", "UpperLow", "UpperMidLow"],
     //     "armor": ["All", "Armor", "Shields", "Gaments", "Footgears", "Accessory"],
     //     "card": ["All", "Armor", "Headgear", "Weapon", "Shield", "Garment", "Footgear", "Accessory"] ,
