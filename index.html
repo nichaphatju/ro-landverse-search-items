@@ -17,14 +17,6 @@
         
         <form id="searchForm" class="mt-1">
           <div class="row mx-1">
-              <div class="form-group form-inline invisible">
-                <label for="server">Server: </label>
-                <select name="server" id="server" class="form-control form-control-sm mx-sm-3">
-                    <option value="1" selected>Hela</option>
-                    <option value="2">Freya</option>
-                </select>
-              </div>
-
               <div class="form-group form-inline">
                 <label for="name">Item Name:</label>
                 <input type="text" id="name" name="name" placeholder="Enter name" class="form-control form-control-sm mx-sm-3">
@@ -113,8 +105,8 @@
               </div>
 
               <div class="form-group form-inline">
-                <label for="cardname">Card Name:</label>
-                <input type="text" id="cardname" name="cardname" placeholder="card option" class="form-control form-control-sm mx-sm-3">
+                <label id="cardNameLabel" for="cardname">Card Name:</label>
+                <input type="text" id="cardname" name="cardname" class="form-control form-control-sm mx-sm-3">
               </div>
 
               <div class="form-group form-inline">
@@ -274,32 +266,48 @@
             refinementOptions[category.value].forEach(opt => {
               refine.options[refine.options.length] = new Option(opt.label, opt.value);
             });
-
+            
             enchantOpt.length = 1;
             enchantOpt.dispatchEvent(event);
             enchantOptions[category.value].forEach(opt => {
               enchantOpt.options[enchantOpt.options.length] = new Option(opt.label, opt.value);
             });
+
+            if(category.value == 'costume'){
+              document.getElementById('cardNameLabel').innerHTML = 'Costume Enchant:';
+            }else{
+              document.getElementById('cardNameLabel').innerHTML = 'Card Name:';
+            }
+
+            setEnchantOptions();
         }
 
         enchantOpt.onchange = function() {
-
-          if(enchantOpt.value != 'n' ){
-            opts1.length = 0;
-            opts2.length = 0;
-            opts.forEach(opt => {
-              opts1.options[opts1.options.length] = new Option(opt.label, opt.value);
-              opts2.options[opts2.options.length] = new Option(opt.label, opt.value);
-            });
-          }else{
-            opts1.length = 1;
-            opts2.length = 1;
-            opts1.options[0] = new Option('None', '');
-            opts2.options[0] = new Option('None', '');
-          }
-      }
+          setEnchantOptions();
+        }
 
     });
+
+    function setEnchantOptions(){
+      var category = document.getElementById("category");
+      var enchantOpt = document.getElementById("enchantOpt");
+      var opts1 = document.getElementById("opts1");
+      var opts2 = document.getElementById("opts2");
+
+      if(enchantOpt.value != 'n' && (category.value == 'headgear' || category.value == 'armor' || category.value == 'weapon')){
+        opts1.length = 0;
+        opts2.length = 0;
+        opts.forEach(opt => {
+          opts1.options[opts1.options.length] = new Option(opt.label, opt.value);
+          opts2.options[opts2.options.length] = new Option(opt.label, opt.value);
+        });
+      }else{
+        opts1.length = 1;
+        opts2.length = 1;
+        opts1.options[0] = new Option('None', '');
+        opts2.options[0] = new Option('None', '');
+      }
+    }
 
     function clearForm() {
         document.getElementById("searchForm").reset();
@@ -312,7 +320,6 @@
       const opts1 = document.getElementById('opts1').value;
       const opts2 = document.getElementById('opts2').value;
       const exceptop = document.getElementById('exceptop').value;
-      const sv = document.getElementById('server').value;
       const card = document.getElementById('card').value;
       const cardname = document.getElementById('cardname').value;
       const minprice = document.getElementById('minprice').value;
@@ -327,7 +334,7 @@
 
       resultDiv.innerHTML = `<br/> Searching ${category}...`;
 
-      fetch(`/api/search?name=${name}&category=${category}&sv=${sv}&minprice=${minprice}&maxprice=${maxprice}&ops1=${opts1}&ops2=${opts2}&exceptop=${exceptop}&card=${card}&cardname=${cardname}&subtype=${subtype}&job=${job}&refine=${refine}&enchantopt=${enchantOpt}&sort=${sortOpt}`)
+      fetch(`/api/search?name=${name}&category=${category}&minprice=${minprice}&maxprice=${maxprice}&ops1=${opts1}&ops2=${opts2}&exceptop=${exceptop}&card=${card}&cardname=${cardname}&subtype=${subtype}&job=${job}&refine=${refine}&enchantopt=${enchantOpt}&sort=${sortOpt}`)
         .then(response => response.json())
         .then(data => {
           

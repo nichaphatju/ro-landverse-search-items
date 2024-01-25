@@ -46,11 +46,10 @@ app.get('/api/search', (req, res) => {
         //ใช้ decodeURI แล้วถ้ากรอก % มามัน error (กรอก Spacebar แล้วเป็น %20)
         param.ops1 = param.ops1.replaceAll("%20"," ");
         param.ops2 = param.ops2.replaceAll("%20"," ");
-        console.log("Option 1 : " + param.ops1.toString());
-        console.log("Option 2 : " + param.ops2.toString());
+        // console.log("Option 1 : " + param.ops1.toString());
+        // console.log("Option 2 : " + param.ops2.toString());
 
-        //axios.get(`${apiBaseUrl}${marketAPIPath}?status=LISTING&category=${param.category}&serverId=${param.sv}`).then((resp) => {
-          axios.get(`${apiBaseUrl}${marketAPIPath}?status=LISTING&category=${param.category}`).then((resp) => {
+        axios.get(`${apiBaseUrl}${marketAPIPath}?status=LISTING&category=${param.category}`).then((resp) => {
 
             let respTxt = '';
             let count = 0;
@@ -181,9 +180,9 @@ function filterResults(item, param){
           )
         {
                 let status = false;
-                console.log("CASE : 1")
-                console.log("ITEM OPTION 0 : " + op0 + " : " + param.ops1.toLowerCase())
-                console.log("ITEM OPTION 1 : " + op1 + " : " + param.ops2.toLowerCase())
+                // console.log("CASE : 1")
+                // console.log("ITEM OPTION 0 : " + op0 + " : " + param.ops1.toLowerCase())
+                // console.log("ITEM OPTION 1 : " + op1 + " : " + param.ops2.toLowerCase())
 
                 //กรณีต้องการ 2 ออบเหมือนกัน
                 //เช็ค 2 ออบที่กรอกมาเหมือนกันไหม
@@ -223,7 +222,7 @@ function filterResults(item, param){
         {
             let status = false;
             //กรณีกรอกมาแต่ Param 1
-            console.log("CASE : 2 " + param.ops1)
+            // console.log("CASE : 2 " + param.ops1)
             switch (Number(param.ops1)) {
                 case item.nft.optionId0:
                 case item.nft.optionId1:
@@ -244,7 +243,7 @@ function filterResults(item, param){
         {
             let status = false;
             //กรณีกรอกมาแต่ Param 2
-            console.log("CASE : 3")
+            // console.log("CASE : 3")
             switch (Number(param.ops2)) {
                 case item.nft.optionId0:
                 case item.nft.optionId1:
