@@ -317,6 +317,27 @@ function filterResults(item, param){
         
     }
 
+    //เช็ค Except Option
+    if(param.exceptop != null && param.exceptop != undefined && param.exceptop != "")
+    {
+        var status = false;
+        switch (Number(param.exceptop)) {
+            case item.nft.optionId0:
+            case item.nft.optionId1:
+            case item.nft.optionId2:
+            case item.nft.optionId3:
+            case item.nft.optionId4:
+                status = true;
+              break;
+          }
+
+          if(status)
+          {
+            return false;
+          }
+          
+    }
+
     //     "headgear": ["All", "Upper", "Middle", "Lower", "UpperMid", "MidLow", "UpperLow", "UpperMidLow"],
     //     "armor": ["All", "Armor", "Shields", "Gaments", "Footgears", "Accessory"],
     //     "card": ["All", "Armor", "Headgear", "Weapon", "Shield", "Garment", "Footgear", "Accessory"] ,
@@ -404,6 +425,47 @@ function tranformData(item){
         itemName += `[${item.nft.slots}]`;
     }
 
+    //Tier Item
+    var green = "text-success";
+    var red = "text-danger";
+    var Tier_Op1_FontColor = green;
+    var Tier_Op2_FontColor = green;
+    var Tier_Op3_FontColor = red;
+    var Tier_Op4_FontColor = red;
+    var Tier_Op5_FontColor = red;
+    if(item.nft.tier==1)
+    {
+        Tier_Op1_FontColor = green;
+        Tier_Op2_FontColor = green;
+        Tier_Op3_FontColor = green;
+        Tier_Op4_FontColor = red;
+        Tier_Op5_FontColor = red;
+    }
+    else if(item.nft.tier==2)
+    {
+        Tier_Op1_FontColor = green;
+        Tier_Op2_FontColor = green;
+        Tier_Op3_FontColor = green;
+        Tier_Op4_FontColor = green;
+        Tier_Op5_FontColor = red;
+    }
+    else if(item.nft.tier==3)
+    {
+        Tier_Op1_FontColor = green;
+        Tier_Op2_FontColor = green;
+        Tier_Op3_FontColor = green;
+        Tier_Op4_FontColor = green;
+        Tier_Op5_FontColor = green;
+    }
+    else
+    {
+        Tier_Op1_FontColor = green;
+        Tier_Op2_FontColor = green;
+        Tier_Op3_FontColor = red;
+        Tier_Op4_FontColor = red;
+        Tier_Op5_FontColor = red;
+    }
+
     let colStyle = `col-sm-6 col-md-4`;
     if(item.nft.type == 'Card'){
         colStyle = `col-sm-12 col-md-3`;
@@ -467,11 +529,11 @@ function tranformData(item){
         // }
 
         itemDetailTxt += `</p>`;
-        itemDetailTxt += `1.<b> ${item.nft.option0Text ? item.nft.option0Text : '-'}</b></br>`;
-        itemDetailTxt += `2.<b> ${item.nft.option1Text ? item.nft.option1Text : '-'}</b></br>`;
-        itemDetailTxt += `3.<b> ${item.nft.option2Text ? item.nft.option2Text : '-'}</b></br>`;
-        itemDetailTxt += `4.<b> ${item.nft.option3Text ? item.nft.option3Text : '-'}</b></br>`;
-        itemDetailTxt += `5.<b> ${item.nft.option4Text ? item.nft.option4Text : '-'}</b></br>`;
+        itemDetailTxt += `1.<b class="${Tier_Op1_FontColor}"> ${item.nft.option0Text ? item.nft.option0Text : '-'}</b></br>`;
+        itemDetailTxt += `2.<b class="${Tier_Op2_FontColor}"> ${item.nft.option1Text ? item.nft.option1Text : '-'}</b></br>`;
+        itemDetailTxt += `3.<b class="${Tier_Op3_FontColor}"> ${item.nft.option2Text ? item.nft.option2Text : '-'}</b></br>`;
+        itemDetailTxt += `4.<b class="${Tier_Op4_FontColor}"> ${item.nft.option3Text ? item.nft.option3Text : '-'}</b></br>`;
+        itemDetailTxt += `5.<b class="${Tier_Op5_FontColor}"> ${item.nft.option4Text ? item.nft.option4Text : '-'}</b></br>`;
 
         /** Third section */
         itemDetailTxt += `</li><li class="list-group-item">`;
