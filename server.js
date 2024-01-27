@@ -367,6 +367,18 @@ function filterResults(item, param){
             }else if(subtypeCompare == 'uppermidlow' && (item.nft.locationHeadTop != 1 || item.nft.locationHeadMid != 1 || item.nft.locationHeadLow != 1)){
                 return false;
             }
+        }else if(param.category == 'armor'){
+            if(subtypeCompare == 'accessories' && (item.nft.locationRightAccessory != 1 && item.nft.locationLeftAccessory != 1)){
+                return false;
+            }else if(subtypeCompare == 'armors' && item.nft.locationArmor != 1){
+                return false;
+            }else if(subtypeCompare == 'footgears' && item.nft.locationShoes != 1){
+                return false;
+            }else if(subtypeCompare == 'garments' && item.nft.locationGarment != 1){
+                return false;
+            }else if(subtypeCompare == 'shields' && (item.nft.locationRightHand != 1 && item.nft.locationLeftHand != 1)){
+                return false;
+            }
         }
     }
 
