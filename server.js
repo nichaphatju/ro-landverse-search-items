@@ -562,14 +562,21 @@ function tranformData(item){
         //     itemDetailTxt += `: None</p>`;
         // }
 
+        let card0Info = itemInfo[item.nft.card0] ? itemInfo[item.nft.card0].desc : '';
+        let card1Info = itemInfo[item.nft.card1] ? itemInfo[item.nft.card1].desc : '';
+        let card2Info = itemInfo[item.nft.card2] ? itemInfo[item.nft.card2].desc : '';
+        let card3Info = itemInfo[item.nft.card3] ? itemInfo[item.nft.card3].desc : '';
+
+
         itemDetailTxt += `<div class="container">`;
         itemDetailTxt += `<div class="row">`;
-        itemDetailTxt += `<div class="col">1.<b> ${item.nft.card0Name ? item.nft.card0Name : '-'}</b></div>`;
-        itemDetailTxt += `<div class="col">3.<b> ${item.nft.card2Name ? item.nft.card2Name : '-'}</b></div>`;
+        itemDetailTxt += `<div class="col" data-toggle="tooltip" data-placement="top" data-html="true" title="${card0Info}">1.<b> ${item.nft.card0Name ? item.nft.card0Name : '-'}</b></div>`;
+        itemDetailTxt += `<div class="col" data-toggle="tooltip" data-placement="top" data-html="true" title="${card2Info}">3.<b> ${item.nft.card2Name ? item.nft.card2Name : '-'}</b></div>`;
         itemDetailTxt += `</div>`;
         itemDetailTxt += `<div class="row">`;
-        itemDetailTxt += `<div class="col">2.<b> ${item.nft.card1Name ? item.nft.card1Name : '-'}</b></div>`;
-        itemDetailTxt += `<div class="col">4.<b> ${item.nft.card3Name ? item.nft.card3Name : '-'}</b></div>`;
+        itemDetailTxt += `<div class="col" data-toggle="tooltip" data-placement="top" data-html="true" title="${card1Info}">2.<b> ${item.nft.card1Name ? item.nft.card1Name : '-'}</b></div>`;
+        itemDetailTxt += `<div class="col" data-toggle="tooltip" data-placement="top" data-html="true" title="${card3Info}">4.<b> ${item.nft.card3Name ? item.nft.card3Name : '-'}</b></div>`;
+
         itemDetailTxt += `</div>`;
         itemDetailTxt += `</div>`;
 
